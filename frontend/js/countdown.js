@@ -1,5 +1,5 @@
 //Countdown Timer
-function countdown() {
+//function countdown() {
   const clockdiv = document.getElementById("countdown");
   const countDownTime = clockdiv.getAttribute("data-date") * 1000
 
@@ -22,4 +22,4 @@ function countdown() {
       clockdiv.querySelector(".seconds").innerHTML = seconds;
     }
   }, 1000);
-}
+//}
