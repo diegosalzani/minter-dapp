@@ -155,6 +155,9 @@
       default: null,
     });
 
+    // const ok = true;
+    // contract["base_uri"]= "ipfs://";
+
     if (!ok) {
       console.log("Exiting...");
       process.exit(0);
