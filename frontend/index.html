@@ -1,1548 +1,217 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <script src="web3.min.js"></script>
+    <title>CodeCats</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <script>
-      const abi = [
-        {
-          "inputs": [
-            {
-              "components": [
-                {
-                  "internalType": "string",
-                  "name": "name",
-                  "type": "string"
-                },
-                {
-                  "internalType": "string",
-                  "name": "symbol",
-                  "type": "string"
-                },
-                {
-                  "internalType": "address",
-                  "name": "owner",
-                  "type": "address"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "maxSupply",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "reservedSupply",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "tokensPerMint",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "address payable",
-                  "name": "treasuryAddress",
-                  "type": "address"
-                }
-              ],
-              "internalType": "struct NFTCollection.DeploymentConfig",
-              "name": "deploymentConfig",
-              "type": "tuple"
-            },
-            {
-              "components": [
-                {
-                  "internalType": "string",
-                  "name": "baseURI",
-                  "type": "string"
-                },
-                {
-                  "internalType": "bool",
-                  "name": "metadataUpdatable",
-                  "type": "bool"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "publicMintPrice",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "bool",
-                  "name": "publicMintPriceFrozen",
-                  "type": "bool"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "presaleMintPrice",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "bool",
-                  "name": "presaleMintPriceFrozen",
-                  "type": "bool"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "publicMintStart",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "presaleMintStart",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "string",
-                  "name": "prerevealTokenURI",
-                  "type": "string"
-                },
-                {
-                  "internalType": "bytes32",
-                  "name": "presaleMerkleRoot",
-                  "type": "bytes32"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "royaltiesBps",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "address",
-                  "name": "royaltiesAddress",
-                  "type": "address"
-                }
-              ],
-              "internalType": "struct NFTCollection.RuntimeConfig",
-              "name": "runtimeConfig",
-              "type": "tuple"
-            }
-          ],
-          "stateMutability": "nonpayable",
-          "type": "constructor"
-        },
-        {
-          "inputs": [],
-          "name": "ApprovalCallerNotOwnerNorApproved",
-          "type": "error"
-        },
-        {
-          "inputs": [],
-          "name": "ApprovalQueryForNonexistentToken",
-          "type": "error"
-        },
-        {
-          "inputs": [],
-          "name": "ApprovalToCurrentOwner",
-          "type": "error"
-        },
-        {
-          "inputs": [],
-          "name": "ApproveToCaller",
-          "type": "error"
-        },
-        {
-          "inputs": [],
-          "name": "BalanceQueryForZeroAddress",
-          "type": "error"
-        },
-        {
-          "inputs": [],
-          "name": "MintToZeroAddress",
-          "type": "error"
-        },
-        {
-          "inputs": [],
-          "name": "MintZeroQuantity",
-          "type": "error"
-        },
-        {
-          "inputs": [],
-          "name": "OwnerQueryForNonexistentToken",
-          "type": "error"
-        },
-        {
-          "inputs": [],
-          "name": "TransferCallerNotOwnerNorApproved",
-          "type": "error"
-        },
-        {
-          "inputs": [],
-          "name": "TransferFromIncorrectOwner",
-          "type": "error"
-        },
-        {
-          "inputs": [],
-          "name": "TransferToNonERC721ReceiverImplementer",
-          "type": "error"
-        },
-        {
-          "inputs": [],
-          "name": "TransferToZeroAddress",
-          "type": "error"
-        },
-        {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "internalType": "address",
-              "name": "owner",
-              "type": "address"
-            },
-            {
-              "indexed": true,
-              "internalType": "address",
-              "name": "approved",
-              "type": "address"
-            },
-            {
-              "indexed": true,
-              "internalType": "uint256",
-              "name": "tokenId",
-              "type": "uint256"
-            }
-          ],
-          "name": "Approval",
-          "type": "event"
-        },
-        {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "internalType": "address",
-              "name": "owner",
-              "type": "address"
-            },
-            {
-              "indexed": true,
-              "internalType": "address",
-              "name": "operator",
-              "type": "address"
-            },
-            {
-              "indexed": false,
-              "internalType": "bool",
-              "name": "approved",
-              "type": "bool"
-            }
-          ],
-          "name": "ApprovalForAll",
-          "type": "event"
-        },
-        {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": false,
-              "internalType": "uint8",
-              "name": "version",
-              "type": "uint8"
-            }
-          ],
-          "name": "Initialized",
-          "type": "event"
-        },
-        {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "internalType": "address",
-              "name": "previousOwner",
-              "type": "address"
-            },
-            {
-              "indexed": true,
-              "internalType": "address",
-              "name": "newOwner",
-              "type": "address"
-            }
-          ],
-          "name": "OwnershipTransferred",
-          "type": "event"
-        },
-        {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "internalType": "bytes32",
-              "name": "role",
-              "type": "bytes32"
-            },
-            {
-              "indexed": true,
-              "internalType": "bytes32",
-              "name": "previousAdminRole",
-              "type": "bytes32"
-            },
-            {
-              "indexed": true,
-              "internalType": "bytes32",
-              "name": "newAdminRole",
-              "type": "bytes32"
-            }
-          ],
-          "name": "RoleAdminChanged",
-          "type": "event"
-        },
-        {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "internalType": "bytes32",
-              "name": "role",
-              "type": "bytes32"
-            },
-            {
-              "indexed": true,
-              "internalType": "address",
-              "name": "account",
-              "type": "address"
-            },
-            {
-              "indexed": true,
-              "internalType": "address",
-              "name": "sender",
-              "type": "address"
-            }
-          ],
-          "name": "RoleGranted",
-          "type": "event"
-        },
-        {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "internalType": "bytes32",
-              "name": "role",
-              "type": "bytes32"
-            },
-            {
-              "indexed": true,
-              "internalType": "address",
-              "name": "account",
-              "type": "address"
-            },
-            {
-              "indexed": true,
-              "internalType": "address",
-              "name": "sender",
-              "type": "address"
-            }
-          ],
-          "name": "RoleRevoked",
-          "type": "event"
-        },
-        {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "internalType": "address",
-              "name": "from",
-              "type": "address"
-            },
-            {
-              "indexed": true,
-              "internalType": "address",
-              "name": "to",
-              "type": "address"
-            },
-            {
-              "indexed": true,
-              "internalType": "uint256",
-              "name": "tokenId",
-              "type": "uint256"
-            }
-          ],
-          "name": "Transfer",
-          "type": "event"
-        },
-        {
-          "inputs": [],
-          "name": "ADMIN_ROLE",
-          "outputs": [
-            {
-              "internalType": "bytes32",
-              "name": "",
-              "type": "bytes32"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "DEFAULT_ADMIN_ROLE",
-          "outputs": [
-            {
-              "internalType": "bytes32",
-              "name": "",
-              "type": "bytes32"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "ROYALTIES_BASIS",
-          "outputs": [
-            {
-              "internalType": "uint16",
-              "name": "",
-              "type": "uint16"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "VERSION",
-          "outputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "to",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "tokenId",
-              "type": "uint256"
-            }
-          ],
-          "name": "approve",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "availableSupply",
-          "outputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "owner",
-              "type": "address"
-            }
-          ],
-          "name": "balanceOf",
-          "outputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "baseURI",
-          "outputs": [
-            {
-              "internalType": "string",
-              "name": "",
-              "type": "string"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "contractURI",
-          "outputs": [
-            {
-              "internalType": "string",
-              "name": "",
-              "type": "string"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "uint256",
-              "name": "tokenId",
-              "type": "uint256"
-            }
-          ],
-          "name": "getApproved",
-          "outputs": [
-            {
-              "internalType": "address",
-              "name": "",
-              "type": "address"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "getInfo",
-          "outputs": [
-            {
-              "components": [
-                {
-                  "internalType": "uint256",
-                  "name": "version",
-                  "type": "uint256"
-                },
-                {
-                  "components": [
-                    {
-                      "internalType": "string",
-                      "name": "name",
-                      "type": "string"
-                    },
-                    {
-                      "internalType": "string",
-                      "name": "symbol",
-                      "type": "string"
-                    },
-                    {
-                      "internalType": "address",
-                      "name": "owner",
-                      "type": "address"
-                    },
-                    {
-                      "internalType": "uint256",
-                      "name": "maxSupply",
-                      "type": "uint256"
-                    },
-                    {
-                      "internalType": "uint256",
-                      "name": "reservedSupply",
-                      "type": "uint256"
-                    },
-                    {
-                      "internalType": "uint256",
-                      "name": "tokensPerMint",
-                      "type": "uint256"
-                    },
-                    {
-                      "internalType": "address payable",
-                      "name": "treasuryAddress",
-                      "type": "address"
-                    }
-                  ],
-                  "internalType": "struct NFTCollection.DeploymentConfig",
-                  "name": "deploymentConfig",
-                  "type": "tuple"
-                },
-                {
-                  "components": [
-                    {
-                      "internalType": "string",
-                      "name": "baseURI",
-                      "type": "string"
-                    },
-                    {
-                      "internalType": "bool",
-                      "name": "metadataUpdatable",
-                      "type": "bool"
-                    },
-                    {
-                      "internalType": "uint256",
-                      "name": "publicMintPrice",
-                      "type": "uint256"
-                    },
-                    {
-                      "internalType": "bool",
-                      "name": "publicMintPriceFrozen",
-                      "type": "bool"
-                    },
-                    {
-                      "internalType": "uint256",
-                      "name": "presaleMintPrice",
-                      "type": "uint256"
-                    },
-                    {
-                      "internalType": "bool",
-                      "name": "presaleMintPriceFrozen",
-                      "type": "bool"
-                    },
-                    {
-                      "internalType": "uint256",
-                      "name": "publicMintStart",
-                      "type": "uint256"
-                    },
-                    {
-                      "internalType": "uint256",
-                      "name": "presaleMintStart",
-                      "type": "uint256"
-                    },
-                    {
-                      "internalType": "string",
-                      "name": "prerevealTokenURI",
-                      "type": "string"
-                    },
-                    {
-                      "internalType": "bytes32",
-                      "name": "presaleMerkleRoot",
-                      "type": "bytes32"
-                    },
-                    {
-                      "internalType": "uint256",
-                      "name": "royaltiesBps",
-                      "type": "uint256"
-                    },
-                    {
-                      "internalType": "address",
-                      "name": "royaltiesAddress",
-                      "type": "address"
-                    }
-                  ],
-                  "internalType": "struct NFTCollection.RuntimeConfig",
-                  "name": "runtimeConfig",
-                  "type": "tuple"
-                }
-              ],
-              "internalType": "struct NFTCollection.ContractInfo",
-              "name": "info",
-              "type": "tuple"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "bytes32",
-              "name": "role",
-              "type": "bytes32"
-            }
-          ],
-          "name": "getRoleAdmin",
-          "outputs": [
-            {
-              "internalType": "bytes32",
-              "name": "",
-              "type": "bytes32"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "bytes32",
-              "name": "role",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "address",
-              "name": "account",
-              "type": "address"
-            }
-          ],
-          "name": "grantRole",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "bytes32",
-              "name": "role",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "address",
-              "name": "account",
-              "type": "address"
-            }
-          ],
-          "name": "hasRole",
-          "outputs": [
-            {
-              "internalType": "bool",
-              "name": "",
-              "type": "bool"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "components": [
-                {
-                  "internalType": "string",
-                  "name": "name",
-                  "type": "string"
-                },
-                {
-                  "internalType": "string",
-                  "name": "symbol",
-                  "type": "string"
-                },
-                {
-                  "internalType": "address",
-                  "name": "owner",
-                  "type": "address"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "maxSupply",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "reservedSupply",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "tokensPerMint",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "address payable",
-                  "name": "treasuryAddress",
-                  "type": "address"
-                }
-              ],
-              "internalType": "struct NFTCollection.DeploymentConfig",
-              "name": "deploymentConfig",
-              "type": "tuple"
-            },
-            {
-              "components": [
-                {
-                  "internalType": "string",
-                  "name": "baseURI",
-                  "type": "string"
-                },
-                {
-                  "internalType": "bool",
-                  "name": "metadataUpdatable",
-                  "type": "bool"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "publicMintPrice",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "bool",
-                  "name": "publicMintPriceFrozen",
-                  "type": "bool"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "presaleMintPrice",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "bool",
-                  "name": "presaleMintPriceFrozen",
-                  "type": "bool"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "publicMintStart",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "presaleMintStart",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "string",
-                  "name": "prerevealTokenURI",
-                  "type": "string"
-                },
-                {
-                  "internalType": "bytes32",
-                  "name": "presaleMerkleRoot",
-                  "type": "bytes32"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "royaltiesBps",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "address",
-                  "name": "royaltiesAddress",
-                  "type": "address"
-                }
-              ],
-              "internalType": "struct NFTCollection.RuntimeConfig",
-              "name": "runtimeConfig",
-              "type": "tuple"
-            }
-          ],
-          "name": "initialize",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "owner",
-              "type": "address"
-            },
-            {
-              "internalType": "address",
-              "name": "operator",
-              "type": "address"
-            }
-          ],
-          "name": "isApprovedForAll",
-          "outputs": [
-            {
-              "internalType": "bool",
-              "name": "",
-              "type": "bool"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "wallet",
-              "type": "address"
-            },
-            {
-              "internalType": "bytes32[]",
-              "name": "proof",
-              "type": "bytes32[]"
-            }
-          ],
-          "name": "isWhitelisted",
-          "outputs": [
-            {
-              "internalType": "bool",
-              "name": "",
-              "type": "bool"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "maxSupply",
-          "outputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "metadataUpdatable",
-          "outputs": [
-            {
-              "internalType": "bool",
-              "name": "",
-              "type": "bool"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-            }
-          ],
-          "name": "mint",
-          "outputs": [],
-          "stateMutability": "payable",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "mintingActive",
-          "outputs": [
-            {
-              "internalType": "bool",
-              "name": "",
-              "type": "bool"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "name",
-          "outputs": [
-            {
-              "internalType": "string",
-              "name": "",
-              "type": "string"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "owner",
-          "outputs": [
-            {
-              "internalType": "address",
-              "name": "",
-              "type": "address"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "uint256",
-              "name": "tokenId",
-              "type": "uint256"
-            }
-          ],
-          "name": "ownerOf",
-          "outputs": [
-            {
-              "internalType": "address",
-              "name": "",
-              "type": "address"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "prerevealTokenURI",
-          "outputs": [
-            {
-              "internalType": "string",
-              "name": "",
-              "type": "string"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "presaleActive",
-          "outputs": [
-            {
-              "internalType": "bool",
-              "name": "",
-              "type": "bool"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "presaleMerkleRoot",
-          "outputs": [
-            {
-              "internalType": "bytes32",
-              "name": "",
-              "type": "bytes32"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "bytes32[]",
-              "name": "proof",
-              "type": "bytes32[]"
-            }
-          ],
-          "name": "presaleMint",
-          "outputs": [],
-          "stateMutability": "payable",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "presaleMintPrice",
-          "outputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "presaleMintStart",
-          "outputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "publicMintPrice",
-          "outputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "publicMintStart",
-          "outputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "bytes32",
-              "name": "role",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "address",
-              "name": "account",
-              "type": "address"
-            }
-          ],
-          "name": "renounceRole",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "to",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-            }
-          ],
-          "name": "reserveMint",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "reserveRemaining",
-          "outputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "reservedSupply",
-          "outputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "bytes32",
-              "name": "role",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "address",
-              "name": "account",
-              "type": "address"
-            }
-          ],
-          "name": "revokeRole",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "salePrice",
-              "type": "uint256"
-            }
-          ],
-          "name": "royaltyInfo",
-          "outputs": [
-            {
-              "internalType": "address",
-              "name": "receiver",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "royaltyAmount",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "from",
-              "type": "address"
-            },
-            {
-              "internalType": "address",
-              "name": "to",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "tokenId",
-              "type": "uint256"
-            }
-          ],
-          "name": "safeTransferFrom",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "from",
-              "type": "address"
-            },
-            {
-              "internalType": "address",
-              "name": "to",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "tokenId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "bytes",
-              "name": "_data",
-              "type": "bytes"
-            }
-          ],
-          "name": "safeTransferFrom",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "operator",
-              "type": "address"
-            },
-            {
-              "internalType": "bool",
-              "name": "approved",
-              "type": "bool"
-            }
-          ],
-          "name": "setApprovalForAll",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "bytes4",
-              "name": "interfaceId",
-              "type": "bytes4"
-            }
-          ],
-          "name": "supportsInterface",
-          "outputs": [
-            {
-              "internalType": "bool",
-              "name": "",
-              "type": "bool"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "symbol",
-          "outputs": [
-            {
-              "internalType": "string",
-              "name": "",
-              "type": "string"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "uint256",
-              "name": "tokenId",
-              "type": "uint256"
-            }
-          ],
-          "name": "tokenURI",
-          "outputs": [
-            {
-              "internalType": "string",
-              "name": "",
-              "type": "string"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "tokensPerMint",
-          "outputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "totalSupply",
-          "outputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "to",
-              "type": "address"
-            }
-          ],
-          "name": "transferAdminRights",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "from",
-              "type": "address"
-            },
-            {
-              "internalType": "address",
-              "name": "to",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "tokenId",
-              "type": "uint256"
-            }
-          ],
-          "name": "transferFrom",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "newOwner",
-              "type": "address"
-            }
-          ],
-          "name": "transferOwnership",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "treasuryAddress",
-          "outputs": [
-            {
-              "internalType": "address",
-              "name": "",
-              "type": "address"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "components": [
-                {
-                  "internalType": "string",
-                  "name": "baseURI",
-                  "type": "string"
-                },
-                {
-                  "internalType": "bool",
-                  "name": "metadataUpdatable",
-                  "type": "bool"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "publicMintPrice",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "bool",
-                  "name": "publicMintPriceFrozen",
-                  "type": "bool"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "presaleMintPrice",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "bool",
-                  "name": "presaleMintPriceFrozen",
-                  "type": "bool"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "publicMintStart",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "presaleMintStart",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "string",
-                  "name": "prerevealTokenURI",
-                  "type": "string"
-                },
-                {
-                  "internalType": "bytes32",
-                  "name": "presaleMerkleRoot",
-                  "type": "bytes32"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "royaltiesBps",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "address",
-                  "name": "royaltiesAddress",
-                  "type": "address"
-                }
-              ],
-              "internalType": "struct NFTCollection.RuntimeConfig",
-              "name": "newConfig",
-              "type": "tuple"
-            }
-          ],
-          "name": "updateConfig",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [],
-          "name": "withdrawFees",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        }
-      ];
-      const address = "0x730a5A4411cBB6C2fe7898C456869A7c8C459DF2"; //Replace with your own contract address
-    </script>
-
-    <script>
-      async function connect() {
-        //Allows the user to connect to a wallet like MetaMask
-
-        if (window.ethereum) {
-          const accounts = await window.ethereum.request({
-            method: "eth_requestAccounts",
-          });
-          window.address = accounts[0];
-          document.getElementById("address").textContent = accounts[0];
-          window.web3 = new Web3(window.ethereum);
-          window.contract = new web3.eth.Contract(abi, address);
-
-          loadInfo();
-
-          return true;
-        }
-
-        return false;
-      }
-
-      async function loadInfo() {
-        //Fetches information about the contract like mint price
-
-        window.info = await window.contract.methods.getInfo().call();
-        document.getElementById("price").innerText =
-          info.runtimeConfig.publicMintPrice + " wei";
-        document.getElementById("price").href =
-          "https://etherscan.io/unitconverter?wei=" +
-          info.runtimeConfig.publicMintPrice;
-        document.getElementById("maxAmount").innerText =
-          info.deploymentConfig.tokensPerMint;
-      }
-
-      async function mint() {
-        const amount = parseInt(document.getElementById("amount").value);
-        const value = BigInt(info.runtimeConfig.publicMintPrice) * BigInt(amount);
-
-        // Calls the contract ABI to mint NFTs
-        await contract.methods
-          .mint(amount)
-          .send({ from: window.address, value: value.toString() });
-      }
-
-      connect();
-    </script>
+    <!-- favicon -->
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="images/x-icon/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="images/x-icon/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="images/x-icon/favicon-16x16.png"
+    />
+    <link rel="manifest" href="images/x-icon/site.webmanifest" />
+    <link rel="stylesheet" href="css/three-dots.min.css" />
+    <link rel="stylesheet" href="css/splide.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
   </head>
-
   <body>
-    <div>
-      <div id="address">Wallet not connected</div>
-
-      <div>
-        <button id="connect" onclick="connect()">Connect your wallet</button>
-      </div>
-      <div>
-        <div>Minting price per token: <a id="price" target="_blank"></a></div>
-        <div>Maximum tokens per mint: <span id="maxAmount"></span></div>
-
-        <div>
-          <input
-            id="amount"
-            type="number"
-            step="1"
-            min="1"
-            max="10"
-            value="1"
-          />
-          <button id="mint" onclick="mint()">Mint</button>
+    <header>
+      <div class="container">
+        <div class="logo">
+          <a href="/">
+            <img src="images/x-icon/favicon-32x32.png" alt="logo" />
+          </a>
+        </div>
+        <div class="menu">
+          <a
+            href="https://discord.gg/A9CnsVzzkZ"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src="images/header/discord.webp" alt="Discord" />
+          </a>
+          <a
+            href="https://twitter.com/codeSTACKr"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src="images/header/twitter.webp" alt="Twitter" />
+          </a>
+          <a
+            href="https://opensea.io/collection/codecats"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src="images/header/opensea.webp" alt="Opensea" />
+          </a>
+          <button class="wallet-btn btn" id="connectWallet">
+            <span>Connect Wallet</span>
+          </button>
         </div>
       </div>
+    </header>
+
+    <section class="container not-connected">
+      <div>
+        <h2 id="welcomeH2">Connect to MetaMask to Get Started</h2>
+        <h1 id="welcomeH1">Welcome to the CodeCats NFT Project!</h1>
+        <p id="welcomeP">
+          The CodeCats NFT Project is a decentralized, open-source project that aims to demonstrate how to develope and launch your own NFT Collection. Follow step by step on the <a href="https://youtube.com/codestackr"  target="_blank" rel="noopener noreferrer">codeSTACKr</a> YouTube channel.
+        </p>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="countdown card">
+        <div id="countdown">
+          <ul class="count-down" data-date="">
+            <li class="clock-item">
+              <span class="count-number days">20</span>
+              <p class="count-text">Days</p>
+            </li>
+
+            <li class="clock-item">
+              <span class="count-number hours">20</span>
+              <p class="count-text">Hour</p>
+            </li>
+
+            <li class="clock-item">
+              <span class="count-number minutes">20</span>
+              <p class="count-text">Min</p>
+            </li>
+
+            <li class="clock-item">
+              <span class="count-number seconds">20</span>
+              <p class="count-text">Sec</p>
+            </li>
+          </ul>
+          <h2 id="subHeading">Pre-Sale Countdown</h2>
+        </div>
+        <h1 id="mainHeading">NFT Drop Coming Soon!!</h1>
+        <p id="mainText">
+          A new batch of cute cats will be available very soon!
+        </p>
+        <a
+          id="actionButton"
+          href="https://discord.gg/A9CnsVzzkZ"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hero-btn btn"
+          ><span>Join the Catmmunity</span>
+        </a>
+        <div id="mintContainer" class="mint-container hidden">
+          <div class="info-container">
+            <div>
+              <h3>Supply</h3>
+              <p id="totalSupply">100</p>
+            </div>
+            <div>
+              <h3>Price Per Mint</h3>
+              <p id="pricePerMint">1 ETH</p>
+            </div>
+            <div>
+              <h3>Max</h3>
+              <p id="maxPerMint">5 per wallet</p>
+            </div>
+          </div>
+          <div class="mint-qty">
+            <span>
+              <button class="input-number-decrement btn" id="mintDecrement">–</button>
+              <input
+                id="mintInput"
+                class="input-number btn"
+                type="number"
+                value="1"
+                min="1"
+                max="5"
+              />
+              <button class="input-number-increment btn" id="mintIncrement">+</button>
+            </span>
+            <button id="setQtyMax" class="btn">SET MAX</button>
+          </div>
+          <div class="total-price-container">
+            <h3>Total</h3>
+            <p id="totalPrice">.001 ETH</p>
+          </div>
+          <button id="mintButton" class="hero-btn btn mint-btn">Mint</button>
+        </div>
+      </div>
+      <div class="minted-container card show-card hidden">
+        <h1>🎉</h1>
+        <h2>Minted!</h2>
+        <p>Here's your trasaction link:</p>
+        <a id="mintedTxnBtn" href="" target="_blank" rel="noopener noreferrer">
+          <button class="hero-btn btn">View Transaction</button>
+        </a>
+        <p>View it in the collection:</p>
+        <a
+          id="mintedLinkBtn"
+          href="https://testnets.opensea.io/collection/teststackr-collection"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <button class="hero-btn btn">View Collection</button>
+        </a>
+      </div>
+    </section>
+
+    <div id="spinner" class="dot-spin"></div>
+
+    <div class="splide">
+      <div class="splide__track">
+        <ul class="splide__list">
+          <li class="splide__slide">
+            <img src="images/slider/0.png" />
+          </li>
+          <li class="splide__slide">
+            <img src="images/slider/1.png" />
+          </li>
+          <li class="splide__slide">
+            <img src="images/slider/2.png" />
+          </li>
+          <li class="splide__slide">
+            <img src="images/slider/3.png" />
+          </li>
+          <li class="splide__slide">
+            <img src="images/slider/4.png" />
+          </li>
+          <li class="splide__slide">
+            <img src="images/slider/5.png" />
+          </li>
+          <li class="splide__slide">
+            <img src="images/slider/6.png" />
+          </li>
+          <li class="splide__slide">
+            <img src="images/slider/7.png" />
+          </li>
+          <li class="splide__slide">
+            <img src="images/slider/8.png" />
+          </li>
+        </ul>
+      </div>
     </div>
+
+    <script src="js/metamask-onboarding.bundle.js"></script>
+    <script src="js/web3.min.js"></script>
+    <script src="js/splide.min.js"></script>
+    <script src="js/constants.js"></script>
+    <script src="js/abi.js"></script>
+    <script src="js/countdown.js"></script>
+    <script src="js/app.js"></script>
   </body>
 </html>
