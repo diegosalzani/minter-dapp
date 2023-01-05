@@ -1509,7 +1509,7 @@
           window.address = accounts[0];
           const myString = accounts[0];
           const stringLength = myString.length; // this will be 16
-          const shortAddress = myString.charAt(stringLength - 7); // this wi
+          const shortAddress = myString.charAt(stringLength - 12); // this wi
           document.getElementById("connect").textContent = shortAddress;
           window.web3 = new Web3(window.ethereum);
           window.contract = new web3.eth.Contract(abi, address);
