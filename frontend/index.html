@@ -1544,7 +1544,7 @@
 
       async function mint5() {
         const amount = 5;
-        const value = BigInt(info.runtimeConfig.publicMintPrice) * BigInt(amount);
+        const value = BigInt(info.runtimeConfig.publicMintPrice) * BigInt(5);
 
         // Calls the contract ABI to mint NFTs
         await contract.methods
