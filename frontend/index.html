@@ -1507,7 +1507,10 @@
             method: "eth_requestAccounts",
           });
           window.address = accounts[0];
-          document.getElementById("connect").textContent = accounts[0];
+          const myString = accounts[0];
+          const stringLength = myString.length; // this will be 16
+          const shortAddress = myString.charAt(stringLength - 7); // this wi
+          document.getElementById("connect").textContent = shortAddress;
           window.web3 = new Web3(window.ethereum);
           window.contract = new web3.eth.Contract(abi, address);
 
