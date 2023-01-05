@@ -1533,8 +1533,28 @@
           info.deploymentConfig.tokensPerMint;
       }
 
-      async function mint() {
-        const amount = parseInt(document.getElementById("amount").value);
+      async function mint1() {
+        const amount = 1;
+        const value = BigInt(info.runtimeConfig.publicMintPrice) * BigInt(amount);
+
+        // Calls the contract ABI to mint NFTs
+        await contract.methods
+          .mint(amount)
+          .send({ from: window.address, value: value.toString() });
+      }
+
+      async function mint5() {
+        const amount = 5;
+        const value = BigInt(info.runtimeConfig.publicMintPrice) * BigInt(amount);
+
+        // Calls the contract ABI to mint NFTs
+        await contract.methods
+          .mint(amount)
+          .send({ from: window.address, value: value.toString() });
+      }
+
+      async function mint10() {
+        const amount = 10;
         const value = BigInt(info.runtimeConfig.publicMintPrice) * BigInt(amount);
 
         // Calls the contract ABI to mint NFTs
@@ -1558,7 +1578,7 @@
           <img src="images/loggoo.png" class="u-logo-image u-logo-image-1">
         </a>
         <p class="u-align-left u-custom-font u-text u-text-1">Crazy Eggs</p>
-        <div id="address">Wallet not connected</div>
+        
         <button id="connect" onclick="connect()"  class="u-border-2 u-border-grey-75 u-btn u-btn-round u-button-style u-custom-color-6 u-custom-font u-hover-palette-1-light-1 u-radius-6 u-btn-1">CONNECT WALLET</button>
         <div class="u-social-icons u-spacing-10 u-social-icons-1">
           <a class="u-social-url" title="twitter" target="_blank" href="https://twitter.com/CrazyEggs_NFT"><span class="u-icon u-social-icon u-social-twitter u-icon-1"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 112 112" style=""><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#svg-e3e5"></use></svg><svg class="u-svg-content" viewBox="0 0 112 112" x="0" y="0" id="svg-e3e5"><circle fill="currentColor" class="st0" cx="56.1" cy="56.1" r="55"></circle><path fill="#FFFFFF" d="M83.8,47.3c0,0.6,0,1.2,0,1.7c0,17.7-13.5,38.2-38.2,38.2C38,87.2,31,85,25,81.2c1,0.1,2.1,0.2,3.2,0.2
@@ -1589,9 +1609,10 @@ c2.7-0.3,5.3-1,7.7-2.1C88.7,43,86.4,45.4,83.8,47.3z"></path></svg></span>
             <img class="u-image u-image-contain u-image-default u-preserve-proportions u-image-2" src="images/common.png" alt="" data-image-width="1500" data-image-height="1500">
             <p class="u-align-center u-custom-font u-text u-text-2">2541/50<span style="font-weight: 700;"></span>00
             </p>
-            <a href="https://nicepage.studio" class="u-align-center u-border-2 u-border-grey-75 u-btn u-btn-round u-button-style u-custom-color-4 u-custom-font u-hover-palette-1-light-1 u-radius-14 u-btn-1">MINT 1 EGG - 0.03 ETH</a>
-            <a href="https://nicepage.studio" class="u-border-2 u-border-grey-75 u-btn u-btn-round u-button-style u-custom-color-4 u-custom-font u-hover-palette-1-light-1 u-radius-14 u-btn-2">MINT 5 EGGS - 0.15 ETH</a>
-            <a href="https://nicepage.studio" class="u-align-center u-border-2 u-border-grey-75 u-btn u-btn-round u-button-style u-custom-color-4 u-custom-font u-hover-palette-1-light-1 u-radius-14 u-btn-3">MINT 10 EGGS - 0.3 ETH</a>
+            <button id="mint" onclick="mint()">Mint</button>
+            <button id="mint" onclick="mint1()" class="u-align-center u-border-2 u-border-grey-75 u-btn u-btn-round u-button-style u-custom-color-4 u-custom-font u-hover-palette-1-light-1 u-radius-14 u-btn-1">MINT 1 EGG - 0.03 ETH</button>
+            <button id="mint" onclick="mint5()" class="u-border-2 u-border-grey-75 u-btn u-btn-round u-button-style u-custom-color-4 u-custom-font u-hover-palette-1-light-1 u-radius-14 u-btn-2">MINT 5 EGGS - 0.15 ETH</button>
+            <button id="mint" onclick="mint10()" class="u-align-center u-border-2 u-border-grey-75 u-btn u-btn-round u-button-style u-custom-color-4 u-custom-font u-hover-palette-1-light-1 u-radius-14 u-btn-3">MINT 10 EGGS - 0.3 ETH</button>
             <h6 class="u-text u-text-body-alt-color u-text-3">
               <a class="u-border-1 u-border-active-palette-2-base u-border-hover-palette-1-base u-border-no-left u-border-no-right u-border-no-top u-btn u-button-link u-button-style u-custom-font u-none u-text-hover-custom-color-4 u-text-white u-btn-4" href="https://goerli.etherscan.io/address/0x80701803127950b2418b5f74c83f35151f20a6bC" target="_blank">contract: 0x80701803127950b2418b5f74c83f35151f20a6bC</a>
             </h6>
